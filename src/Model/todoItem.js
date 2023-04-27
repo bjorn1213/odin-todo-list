@@ -32,7 +32,12 @@ const todoItemFactory = (
     description = newDescription;
   };
   const setPriority = (newPriority) => {
-    priority = newPriority;
+    let success = false;
+    if (validPriorities.includes(newPriority.toLowerCase())) {
+      priority = inputPriority.toLowerCase();
+      success = true;
+    }
+    return success;
   };
   const setDueDate = (newDueDate) => {
     dueDate = newDueDate;
