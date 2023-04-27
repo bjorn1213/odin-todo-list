@@ -1,11 +1,12 @@
-const todoItemFactory = (
+export default function todoItemFactory(
   inputTitle = "newTodoTitle",
   inputDescription = "newTodoDescription",
   inputDueDate = new Date().getDate(),
   inputPriority = "low"
-) => {
+) {
   const validPriorities = ["high", "medium", "low"];
 
+  // Parse inputs
   let title = inputTitle;
   let description = inputDescription;
   let dueDate = inputDueDate;
@@ -14,12 +15,13 @@ const todoItemFactory = (
     priority = inputPriority.toLowerCase();
   }
 
+  // Set to uncompleted, and implement toggle
   let todoCompleted = false;
-
   const toggleCompleted = () => {
     todoCompleted = !todoCompleted;
   };
 
+  // Define getters & setters
   const getTitle = () => title;
   const getDescription = () => description;
   const getDueDate = () => dueDate;
@@ -55,7 +57,4 @@ const todoItemFactory = (
     setPriority,
     toggleCompleted,
   };
-};
-
-const x = todoItemFactory();
-console.log(x.getPriority());
+}
