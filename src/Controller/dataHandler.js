@@ -19,10 +19,8 @@ const getDummyPortfolio = () => {
       );
 
       project.addTodoItem(todo);
-      todo.setProject(project);
     }
     portfolio.addProject(project);
-    project.setPortfolio(portfolio);
   }
 
   portfolio.setActiveProjectID(0);

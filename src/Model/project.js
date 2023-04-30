@@ -4,7 +4,6 @@ export default function projectFactory(inputProjectName = "newProjectName") {
   // Initialise main data
   let projectName = inputProjectName;
   let todoItems = {};
-  let portfolio;
 
   // Define simple setters/getters
   const setProjectName = (newProjectName) => {
@@ -12,10 +11,6 @@ export default function projectFactory(inputProjectName = "newProjectName") {
   };
   const getProjectName = () => projectName;
   const getTodoItems = () => todoItems;
-  const setPortfolio = (newPortfolio) => {
-    portfolio = newPortfolio;
-  };
-  const getPortfolio = () => portfolio;
 
   // Implement adding/removing todo item logic
   const addTodoItem = (todoItem) => {
@@ -36,8 +31,6 @@ export default function projectFactory(inputProjectName = "newProjectName") {
   return {
     setProjectName,
     getProjectName,
-    setPortfolio,
-    getPortfolio,
     getTodoItems,
     addTodoItem,
     removeTodoItem,
