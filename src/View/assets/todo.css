@@ -25,7 +25,7 @@
 
   display: grid;
   grid-template-columns: 1fr auto;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto auto 1fr auto;
   gap: 0.2rem;
 }
 
@@ -73,4 +73,46 @@
   grid-row: 3;
   grid-column: 1 / -1;
   overflow: auto;
+}
+
+.todo-btn-container {
+  grid-row: -1;
+  grid-column: 1 / -1;
+
+  display: flex;
+  justify-content: end;
+}
+
+.todo-item button {
+  display: inline-block;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 5px;
+  background: var(--todo-background-color);
+  color: black;
+  font-family: "Fira Sans";
+  cursor: pointer;
+  font-size: 0.8rem;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.todo-item .btn-todo-toggle-complete:hover {
+  outline: 1px solid var(--main-color);
+}
+
+.todo-item .btn-todo-remove:hover {
+  outline: 1px solid #c20000;
+}
+
+.todo-item .btn-todo-toggle-complete:active {
+  background-color: var(--main-color);
+  color: white;
+  font-weight: bold;
+}
+
+.todo-item .btn-todo-remove:active {
+  background-color: #c20000;
+  color: white;
+  font-weight: bold;
 }

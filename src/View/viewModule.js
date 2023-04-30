@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 const createBanner = (pageTitle) => {
   const banner = document.createElement("div");
   banner.classList.add("banner");
@@ -9,6 +11,8 @@ const createBanner = (pageTitle) => {
 const getProjectSidebarItemID = (projectID) => `project-${projectID}`;
 
 const getProjectIDfromDOMID = (domID) => domID.slice(8);
+
+const getTodoIDfromDOMID = (domID) => domID.slice(5);
 
 const toggleActiveProject = (oldActiveID, newActiveID) => {
   const previousActiveDOMID = getProjectSidebarItemID(oldActiveID);
@@ -50,7 +54,7 @@ const createSidebar = (projects, callbackFunction) => {
   return sidebar;
 };
 
-const createTodoItem = (id, todo) => {
+const createTodoItem = (id, todo, deleteTodoCallback) => {
   const todoItem = document.createElement("div");
 
   todoItem.classList.add("todo-item");
@@ -64,7 +68,7 @@ const createTodoItem = (id, todo) => {
   const dueDate = todo.getDueDate();
   const dueDateDOM = document.createElement("div");
   dueDateDOM.classList.add("todo-date");
-  dueDateDOM.textContent = dueDate;
+  dueDateDOM.textContent = format(dueDate, "dd-MM-yyyy");
 
   const description = todo.getDescription();
   const descriptionDOM = document.createElement("div");
@@ -76,23 +80,42 @@ const createTodoItem = (id, todo) => {
   priorityDOM.classList.add("todo-priority");
   priorityDOM.classList.add(`priority-${priority}`);
 
+  const removeTodo = document.createElement("button");
+  removeTodo.classList.add("btn-todo-remove");
+  removeTodo.textContent = "Delete";
+  removeTodo.addEventListener("click", (event) => {
+    const domID = event.target.parentNode.parentNode.id;
+    deleteTodoCallback(getTodoIDfromDOMID(domID));
+  });
+
+  const toggleComplete = document.createElement("button");
+  toggleComplete.classList.add("btn-todo-toggle-complete");
+
   const completed = todo.getCompleted();
   if (completed) {
     priorityDOM.classList.add("todo-completed");
+    toggleComplete.textContent = "To do";
+  } else {
+    toggleComplete.textContent = "Complete";
   }
 
-  todoItem.append(titleDOM, dueDateDOM, priorityDOM, descriptionDOM);
+  const todoBtnContainer = document.createElement("div");
+  todoBtnContainer.classList.add("todo-btn-container");
+
+  todoBtnContainer.append(toggleComplete, removeTodo);
+
+  todoItem.append(titleDOM, dueDateDOM, priorityDOM, descriptionDOM, todoBtnContainer);
 
   return todoItem;
 };
 
-const createTodoOverview = (project) => {
+const createTodoOverview = (project, deleteTodoCallback) => {
   const overview = document.createElement("div");
   overview.id = "todo-overview";
 
   const todos = project.getTodoItems();
   for (const [id, todoItem] of Object.entries(todos)) {
-    overview.appendChild(createTodoItem(id, todoItem));
+    overview.appendChild(createTodoItem(id, todoItem, deleteTodoCallback));
   }
 
   return overview;

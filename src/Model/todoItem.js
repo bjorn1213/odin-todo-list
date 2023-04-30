@@ -1,7 +1,7 @@
 export default function todoItemFactory(
   inputTitle = "newTodoTitle",
   inputDescription = "newTodoDescription",
-  inputDueDate = new Date().getDate(),
+  inputDueDate = new Date(Date.now()),
   inputPriority = "low"
 ) {
   const validPriorities = ["high", "medium", "low"];

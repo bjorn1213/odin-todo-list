@@ -20,6 +20,15 @@ if (debug) {
   printPortfolioContents(mainPortfolio);
 }
 
+function removeTodo(todoID) {
+  const portfolio = mainPortfolio;
+  const project = portfolio.getProjectByID(portfolio.getActiveProjectID());
+
+  project.removeTodoItem(todoID);
+  const overview = createTodoOverview(project, removeTodo);
+  replaceTodoOverview(overview);
+}
+
 const activateProject = (projectID) => {
   const portfolio = mainPortfolio;
   if (!(projectID in portfolio.getProjects())) {
@@ -36,7 +45,7 @@ const activateProject = (projectID) => {
   portfolio.setActiveProjectID(projectID);
 
   const project = portfolio.getProjectByID(projectID);
-  const overview = createTodoOverview(project);
+  const overview = createTodoOverview(project, removeTodo);
   replaceTodoOverview(overview);
 };
 
@@ -47,7 +56,7 @@ const initialisePage = (portfolio) => {
   const container = createContainer();
   const banner = createBanner("Todo Application");
   const sidebar = createSidebar(projects, activateProject);
-  const overview = createTodoOverview(firstProject);
+  const overview = createTodoOverview(firstProject, removeTodo);
 
   container.append(banner, sidebar, overview);
   replaceContainer(container);
