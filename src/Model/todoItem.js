@@ -25,8 +25,7 @@ export default function todoItemFactory(
   const getTitle = () => title;
   const getDescription = () => description;
   const getDueDate = () => dueDate;
-  const getPriority = () =>
-    priority.charAt(0).toUpperCase() + priority.slice(1).toLowerCase();
+  const getPriority = () => priority.charAt(0).toUpperCase() + priority.slice(1).toLowerCase();
 
   const setTitle = (newTitle) => {
     title = newTitle;

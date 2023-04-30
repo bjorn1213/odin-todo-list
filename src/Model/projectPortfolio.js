@@ -1,6 +1,6 @@
 import { getInsertableID } from "./utility";
 
-export default function projectPortfolioFactory(inputPortfolioName = "newPortfolioName") {
+export default function portfolioFactory(inputPortfolioName = "newPortfolioName") {
   // Initialise main data
   let portfolioName = inputPortfolioName;
   let projects = {};

@@ -1,7 +1,7 @@
 // given an object with ID (integer) keys, get lowest unused key value
 const getInsertableID = (objectWithIDs) => {
   const itemCount = Object.keys(objectWithIDs).length;
-  let returnID = itemCount + 1;
+  let returnID = itemCount;
 
   if (itemCount === 0) {
     returnID = 0;
@@ -12,7 +12,7 @@ const getInsertableID = (objectWithIDs) => {
         break;
       }
     }
-    returnID = itemCount + 1;
+    returnID = itemCount;
   }
 
   return returnID;
