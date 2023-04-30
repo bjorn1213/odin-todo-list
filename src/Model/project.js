@@ -1,3 +1,5 @@
+import { getInsertableID } from "./utility";
+
 export default function projectFactory(inputProjectName = "newProjectName") {
   // Initialise main data
   let projectName = inputProjectName;
@@ -11,28 +13,8 @@ export default function projectFactory(inputProjectName = "newProjectName") {
   const getTodoItems = () => todoItems;
 
   // Implement adding/removing todo item logic
-  const getInsertableID = () => {
-    const itemCount = Object.keys(todoItems).length;
-    let returnID = itemCount + 1;
-
-    if (itemCount === 0) {
-      returnID = 0;
-    } else {
-      for (let i = 0; i < itemCount; i++) {
-        if (!(i in todoItems)) {
-          returnID = i;
-          break;
-        }
-      }
-      returnID = itemCount + 1;
-    }
-
-    return returnID;
-  };
-
   const addTodoItem = (todoItem) => {
-    const insertID = getInsertableID();
-
+    const insertID = getInsertableID(todoItems);
     todoItems[insertID] = todoItem;
   };
 
