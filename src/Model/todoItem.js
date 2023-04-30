@@ -16,10 +16,11 @@ export default function todoItemFactory(
   }
 
   // Set to uncompleted, and implement toggle
-  let todoCompleted = false;
+  let isCompleted = false;
   const toggleCompleted = () => {
-    todoCompleted = !todoCompleted;
+    isCompleted = !isCompleted;
   };
+  const getCompleted = () => isCompleted;
 
   // Define getters & setters
   const getTitle = () => title;
@@ -54,6 +55,7 @@ export default function todoItemFactory(
     setDueDate,
     getPriority,
     setPriority,
+    getCompleted,
     toggleCompleted,
   };
 }

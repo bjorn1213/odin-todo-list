@@ -55,7 +55,33 @@ const createTodoItem = (id, todo) => {
 
   todoItem.classList.add("todo-item");
   todoItem.id = `todo-${id}`;
-  todoItem.textContent = todo.getTitle();
+
+  const title = todo.getTitle();
+  const titleDOM = document.createElement("div");
+  titleDOM.classList.add("todo-title");
+  titleDOM.textContent = title;
+
+  const dueDate = todo.getDueDate();
+  const dueDateDOM = document.createElement("div");
+  dueDateDOM.classList.add("todo-date");
+  dueDateDOM.textContent = dueDate;
+
+  const description = todo.getDescription();
+  const descriptionDOM = document.createElement("div");
+  descriptionDOM.classList.add("todo-description");
+  descriptionDOM.textContent = description;
+
+  const priority = todo.getPriority();
+  const priorityDOM = document.createElement("div");
+  priorityDOM.classList.add("todo-priority");
+  priorityDOM.classList.add(`priority-${priority}`);
+
+  const completed = todo.getCompleted();
+  if (completed) {
+    priorityDOM.classList.add("todo-completed");
+  }
+
+  todoItem.append(titleDOM, dueDateDOM, priorityDOM, descriptionDOM);
 
   return todoItem;
 };
