@@ -6,11 +6,12 @@ const getDummyPortfolio = () => {
   const portfolio = portfolioFactory("Dummy portfolio");
 
   const projectCount = 3;
-  const maxTodoCount = 5;
+  const maxTodoCount = 10;
+  const minTodoCount = 6;
   for (let iProject = 0; iProject < projectCount; iProject++) {
     const project = projectFactory(`Dummy project ${iProject + 1}`);
 
-    const todoCount = Math.round(Math.random() * (maxTodoCount - 1)) + 1;
+    const todoCount = Math.round(Math.random() * (maxTodoCount - minTodoCount)) + minTodoCount;
     for (let iTodo = 0; iTodo < todoCount; iTodo++) {
       const todo = todoItemFactory(`Dummy todo item ${iTodo + 1}`, "Dummy todo description");
 

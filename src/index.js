@@ -1,5 +1,6 @@
 import "./View/assets/todo.css";
 import "./View/assets/style.css";
+import "./View/assets/fonts.css";
 
 import { getDummyPortfolio, printPortfolioContents } from "./Controller/dataHandler";
 import { generateFullPage } from "./View/viewModule";

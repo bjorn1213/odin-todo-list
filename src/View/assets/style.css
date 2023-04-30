@@ -1,17 +1,61 @@
+:root {
+  --main-color: #006d77;
+  --secondary-color: #83c5be;
+  --neutral-color: #edf6f9;
+
+  --main-color-highlight: #008996;
+  --secondary-color-highlight: #8edad2;
+}
+
 body,
 html {
+  font-family: "Fira Sans";
   margin: 0;
   padding: 0;
   height: 100%;
 }
 
 #container {
+  height: 100%;
+  background-color: var(--neutral-color);
   display: grid;
-  grid-template-columns: 1fr 5fr;
+  grid-template-columns: 200px 1fr;
   grid-template-rows: 100px 1fr;
 }
 
 .banner {
+  font-size: 2rem;
+  font-weight: bolder;
+  color: var(--main-color);
+  border-bottom: 3px solid var(--main-color);
+
+  padding: 10px;
+  align-self: end;
+
   grid-column: 1 / -1;
   grid-row: 1;
+}
+
+.sidebar {
+  padding-top: 50px;
+  background-color: var(--secondary-color);
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: 2.5rem;
+}
+
+.project-item {
+  border-left: 10px solid var(--main-color);
+  padding-left: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.project-item:hover {
+  border-left: 10px solid var(--main-color-highlight);
+  background-color: var(--secondary-color-highlight);
+}
+
+.project-item:active {
+  background-color: var(--secondary-color);
 }
