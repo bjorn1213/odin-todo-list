@@ -11,6 +11,7 @@ export default function todoItemFactory(
   let description = inputDescription;
   let dueDate = inputDueDate;
   let priority = validPriorities.slice(-1);
+  let project;
   if (validPriorities.includes(inputPriority.toLowerCase())) {
     priority = inputPriority.toLowerCase();
   }
@@ -26,6 +27,7 @@ export default function todoItemFactory(
   const getDescription = () => description;
   const getDueDate = () => dueDate;
   const getPriority = () => priority.charAt(0).toUpperCase() + priority.slice(1).toLowerCase();
+  const getProject = () => project;
 
   const setTitle = (newTitle) => {
     title = newTitle;
@@ -44,6 +46,9 @@ export default function todoItemFactory(
   const setDueDate = (newDueDate) => {
     dueDate = newDueDate;
   };
+  const setProject = (newProject) => {
+    project = newProject;
+  };
 
   return {
     getTitle,
@@ -54,6 +59,8 @@ export default function todoItemFactory(
     setDueDate,
     getPriority,
     setPriority,
+    setProject,
+    getProject,
     toggleCompleted,
   };
 }

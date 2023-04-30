@@ -2,10 +2,12 @@
   --todo-background-color: #feffff;
 }
 
-.todo-overview {
+#todo-overview {
   --padding: 50px;
   padding: var(--padding);
   gap: var(--padding);
+
+  background-color: var(--neutral-color);
 
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));

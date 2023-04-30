@@ -1,28 +1,50 @@
-const getBanner = () => {
+const createBanner = (pageTitle) => {
   const banner = document.createElement("div");
   banner.classList.add("banner");
 
-  banner.textContent = "Todo Application";
+  banner.textContent = pageTitle;
   return banner;
+};
+
+const getProjectSidebarItemID = (projectID) => `project-${projectID}`;
+
+const getProjectIDfromDOMID = (domID) => domID.slice(8);
+
+const toggleActiveProject = (oldActiveID, newActiveID) => {
+  const previousActiveDOMID = getProjectSidebarItemID(oldActiveID);
+  document.getElementById(previousActiveDOMID).classList.toggle("active-project");
+
+  const projectDOMID = getProjectSidebarItemID(newActiveID);
+  document.getElementById(projectDOMID).classList.toggle("active-project");
 };
 
 const createSidebarItem = (id, project) => {
   const item = document.createElement("div");
 
   item.classList.add("project-item");
-  item.id = `project-${id}`;
+  item.id = getProjectSidebarItemID(id);
   item.textContent = project.getProjectName();
 
   return item;
 };
 
-const getSidebar = (portfolio) => {
+const createSidebar = (projects, callbackFunction) => {
   const sidebar = document.createElement("div");
   sidebar.classList.add("sidebar");
 
-  const projects = portfolio.getProjects();
+  const firstProjectID = Object.keys(projects)[0]; // assumes at least 1 project
+
   for (const [id, project] of Object.entries(projects)) {
-    sidebar.appendChild(createSidebarItem(id, project));
+    const sidebarItem = createSidebarItem(id, project);
+    if (id === firstProjectID) {
+      sidebarItem.classList.add("active-project");
+    }
+    sidebarItem.addEventListener("click", (event) => {
+      const domID = event.target.id;
+      callbackFunction(getProjectIDfromDOMID(domID));
+    });
+
+    sidebar.appendChild(sidebarItem);
   }
 
   return sidebar;
@@ -38,9 +60,9 @@ const createTodoItem = (id, todo) => {
   return todoItem;
 };
 
-const getTodoOverview = (project) => {
+const createTodoOverview = (project) => {
   const overview = document.createElement("div");
-  overview.classList.add("todo-overview");
+  overview.id = "todo-overview";
 
   const todos = project.getTodoItems();
   for (const [id, todoItem] of Object.entries(todos)) {
@@ -50,24 +72,28 @@ const getTodoOverview = (project) => {
   return overview;
 };
 
-const getFullPage = (portfolio) => {
+const replaceTodoOverview = (newOverview) => {
+  const overview = document.getElementById("todo-overview");
+  overview.replaceWith(newOverview);
+};
+
+const createContainer = () => {
   const container = document.createElement("div");
-
   container.id = "container";
-  container.appendChild(getBanner());
-  container.appendChild(getSidebar(portfolio));
-
-  const projects = portfolio.getProjects();
-  const firstProject = Object.values(projects)[0]; // assumes at least 1 project in portfolio
-  container.appendChild(getTodoOverview(firstProject));
 
   return container;
 };
 
-const generateFullPage = (portfolio) => {
-  const container = getFullPage(portfolio);
-
-  document.getElementsByTagName("body")[0].replaceChildren(container);
+const replaceContainer = (newContainer) => {
+  document.getElementsByTagName("body")[0].replaceChildren(newContainer);
 };
 
-export { generateFullPage };
+export {
+  createBanner,
+  createSidebar,
+  createContainer,
+  createTodoOverview,
+  replaceContainer,
+  toggleActiveProject,
+  replaceTodoOverview,
+};

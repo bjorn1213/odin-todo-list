@@ -7,18 +7,25 @@ const getDummyPortfolio = () => {
 
   const projectCount = 3;
   const maxTodoCount = 10;
-  const minTodoCount = 6;
+  const minTodoCount = 5;
   for (let iProject = 0; iProject < projectCount; iProject++) {
     const project = projectFactory(`Dummy project ${iProject + 1}`);
 
     const todoCount = Math.round(Math.random() * (maxTodoCount - minTodoCount)) + minTodoCount;
     for (let iTodo = 0; iTodo < todoCount; iTodo++) {
-      const todo = todoItemFactory(`Dummy todo item ${iTodo + 1}`, "Dummy todo description");
+      const todo = todoItemFactory(
+        `Dummy todo item ${iTodo + 1}, for project ${iProject + 1}`,
+        "Dummy todo description"
+      );
 
       project.addTodoItem(todo);
+      todo.setProject(project);
     }
     portfolio.addProject(project);
+    project.setPortfolio(portfolio);
   }
+
+  portfolio.setActiveProjectID(0);
 
   return portfolio;
 };
@@ -38,6 +45,7 @@ const printPortfolioContents = (portfolio) => {
     for (let j = 0; j < todoCount; j++) {
       const todo = todos[j];
       console.log(`${project.getProjectName()} - ${todo.getTitle()}`);
+      console.log(`${todo.getProject().getProjectName()}`);
     }
   }
 };
