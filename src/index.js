@@ -25,7 +25,17 @@ function removeTodo(todoID) {
   const project = portfolio.getProjectByID(portfolio.getActiveProjectID());
 
   project.removeTodoItem(todoID);
-  const overview = createTodoOverview(project, removeTodo);
+  const overview = createTodoOverview(project, removeTodo, toggleCompletedTodo);
+  replaceTodoOverview(overview);
+}
+
+function toggleCompletedTodo(todoID) {
+  const portfolio = mainPortfolio;
+  const project = portfolio.getProjectByID(portfolio.getActiveProjectID());
+  const todo = project.getTodoByID(todoID);
+
+  todo.toggleCompleted();
+  const overview = createTodoOverview(project, removeTodo, toggleCompletedTodo);
   replaceTodoOverview(overview);
 }
 
@@ -45,7 +55,7 @@ const activateProject = (projectID) => {
   portfolio.setActiveProjectID(projectID);
 
   const project = portfolio.getProjectByID(projectID);
-  const overview = createTodoOverview(project, removeTodo);
+  const overview = createTodoOverview(project, removeTodo, toggleCompletedTodo);
   replaceTodoOverview(overview);
 };
 
@@ -56,7 +66,7 @@ const initialisePage = (portfolio) => {
   const container = createContainer();
   const banner = createBanner("Todo Application");
   const sidebar = createSidebar(projects, activateProject);
-  const overview = createTodoOverview(firstProject, removeTodo);
+  const overview = createTodoOverview(firstProject, removeTodo, toggleCompletedTodo);
 
   container.append(banner, sidebar, overview);
   replaceContainer(container);

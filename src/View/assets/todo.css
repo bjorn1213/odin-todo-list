@@ -68,6 +68,11 @@
   background-color: var(--color-high-priority);
 }
 
+.todo-priority.todo-completed {
+  background-color: var(--todo-background-color);
+  outline: 1px solid var(--main-color);
+}
+
 .todo-description {
   padding-top: 10px;
   grid-row: 3;

@@ -54,7 +54,7 @@ const createSidebar = (projects, callbackFunction) => {
   return sidebar;
 };
 
-const createTodoItem = (id, todo, deleteTodoCallback) => {
+const createTodoItem = (id, todo, deleteTodoCallback, completeTodoCallback) => {
   const todoItem = document.createElement("div");
 
   todoItem.classList.add("todo-item");
@@ -90,6 +90,10 @@ const createTodoItem = (id, todo, deleteTodoCallback) => {
 
   const toggleComplete = document.createElement("button");
   toggleComplete.classList.add("btn-todo-toggle-complete");
+  toggleComplete.addEventListener("click", (event) => {
+    const domID = event.target.parentNode.parentNode.id;
+    completeTodoCallback(getTodoIDfromDOMID(domID));
+  });
 
   const completed = todo.getCompleted();
   if (completed) {
@@ -109,13 +113,13 @@ const createTodoItem = (id, todo, deleteTodoCallback) => {
   return todoItem;
 };
 
-const createTodoOverview = (project, deleteTodoCallback) => {
+const createTodoOverview = (project, deleteTodoCallback, completeTodoCallback) => {
   const overview = document.createElement("div");
   overview.id = "todo-overview";
 
   const todos = project.getTodoItems();
   for (const [id, todoItem] of Object.entries(todos)) {
-    overview.appendChild(createTodoItem(id, todoItem, deleteTodoCallback));
+    overview.appendChild(createTodoItem(id, todoItem, deleteTodoCallback, completeTodoCallback));
   }
 
   return overview;

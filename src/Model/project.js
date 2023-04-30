@@ -11,6 +11,7 @@ export default function projectFactory(inputProjectName = "newProjectName") {
   };
   const getProjectName = () => projectName;
   const getTodoItems = () => todoItems;
+  const getTodoByID = (todoID) => todoItems[todoID];
 
   // Implement adding/removing todo item logic
   const addTodoItem = (todoItem) => {
@@ -32,6 +33,7 @@ export default function projectFactory(inputProjectName = "newProjectName") {
     setProjectName,
     getProjectName,
     getTodoItems,
+    getTodoByID,
     addTodoItem,
     removeTodoItem,
   };
