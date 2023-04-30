@@ -1,6 +1,6 @@
-import todoItemFactory from "../Model/todoItem";
+import portfolioFactory from "../Model/portfolio";
 import projectFactory from "../Model/project";
-import portfolioFactory from "../Model/projectPortfolio";
+import todoItemFactory from "../Model/todoItem";
 
 const getDummyPortfolio = () => {
   const portfolio = portfolioFactory("Dummy portfolio");
@@ -10,7 +10,7 @@ const getDummyPortfolio = () => {
   for (let iProject = 0; iProject < projectCount; iProject++) {
     const project = projectFactory(`Dummy project ${iProject + 1}`);
 
-    const todoCount = Math.round(Math.random() * maxTodoCount);
+    const todoCount = Math.round(Math.random() * (maxTodoCount - 1)) + 1;
     for (let iTodo = 0; iTodo < todoCount; iTodo++) {
       const todo = todoItemFactory(`Dummy todo item ${iTodo + 1}`, "Dummy todo description");
 
