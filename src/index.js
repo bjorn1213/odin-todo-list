@@ -6,9 +6,10 @@ import { getDummyPortfolio, printPortfolioContents } from "./Controller/dataHand
 import {
   createBanner,
   createSidebar,
-  createTodoOverview,
+  createTodoContainer,
   createContainer,
   replaceContainer,
+  createTodoItem,
   toggleActiveProject,
   replaceTodoOverview,
 } from "./View/viewModule";
@@ -16,10 +17,12 @@ import {
 const debug = false;
 
 const mainPortfolio = getDummyPortfolio();
+
 if (debug) {
   printPortfolioContents(mainPortfolio);
 }
 
+// functions
 function removeTodo(todoID) {
   const portfolio = mainPortfolio;
   const project = portfolio.getProjectByID(portfolio.getActiveProjectID());
@@ -59,6 +62,18 @@ const activateProject = (projectID) => {
   replaceTodoOverview(overview);
 };
 
+function createTodoOverview(project) {
+  const todoContainer = createTodoContainer();
+
+  const todos = project.getTodoItems();
+  for (const [id, todoItem] of Object.entries(todos)) {
+    todoContainer.appendChild(createTodoItem(id, todoItem, removeTodo, toggleCompletedTodo));
+  }
+
+  return todoContainer;
+}
+
+// create page
 const initialisePage = (portfolio) => {
   const projects = portfolio.getProjects();
   const firstProject = Object.values(projects)[0]; // assumes at least 1 project in portfolio

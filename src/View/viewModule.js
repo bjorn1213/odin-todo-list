@@ -113,16 +113,11 @@ const createTodoItem = (id, todo, deleteTodoCallback, completeTodoCallback) => {
   return todoItem;
 };
 
-const createTodoOverview = (project, deleteTodoCallback, completeTodoCallback) => {
-  const overview = document.createElement("div");
-  overview.id = "todo-overview";
+const createTodoContainer = () => {
+  const todoContainer = document.createElement("div");
+  todoContainer.id = "todo-overview";
 
-  const todos = project.getTodoItems();
-  for (const [id, todoItem] of Object.entries(todos)) {
-    overview.appendChild(createTodoItem(id, todoItem, deleteTodoCallback, completeTodoCallback));
-  }
-
-  return overview;
+  return todoContainer;
 };
 
 const replaceTodoOverview = (newOverview) => {
@@ -145,7 +140,8 @@ export {
   createBanner,
   createSidebar,
   createContainer,
-  createTodoOverview,
+  createTodoContainer,
+  createTodoItem,
   replaceContainer,
   toggleActiveProject,
   replaceTodoOverview,
