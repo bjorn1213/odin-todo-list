@@ -54,7 +54,14 @@ const createSidebar = (projects, callbackFunction) => {
   return sidebar;
 };
 
-const createTodoItem = (id, todo, deleteTodoCallback, completeTodoCallback) => {
+const createTodoItem = (
+  id,
+  todo,
+  deleteTodoCallback,
+  completeTodoCallback,
+  priorityToggleCallback,
+  titleEditCallback
+) => {
   const todoItem = document.createElement("div");
 
   todoItem.classList.add("todo-item");
@@ -64,6 +71,10 @@ const createTodoItem = (id, todo, deleteTodoCallback, completeTodoCallback) => {
   const titleDOM = document.createElement("div");
   titleDOM.classList.add("todo-title");
   titleDOM.textContent = title;
+  titleDOM.addEventListener("click", (event) => {
+    const domID = event.target.parentNode.id;
+    titleEditCallback(getTodoIDfromDOMID(domID));
+  });
 
   const dueDate = todo.getDueDate();
   const dueDateDOM = document.createElement("div");
@@ -79,6 +90,10 @@ const createTodoItem = (id, todo, deleteTodoCallback, completeTodoCallback) => {
   const priorityDOM = document.createElement("div");
   priorityDOM.classList.add("todo-priority");
   priorityDOM.classList.add(`priority-${priority}`);
+  priorityDOM.addEventListener("click", (event) => {
+    const domID = event.target.parentNode.id;
+    priorityToggleCallback(getTodoIDfromDOMID(domID));
+  });
 
   const removeTodo = document.createElement("button");
   removeTodo.classList.add("btn-todo-remove");
@@ -144,6 +159,41 @@ const createAddTodoItemButton = (callbackFunction) => {
   return addTodoButton;
 };
 
+function createTodoTitleEditor(originalTitle, callbackFunction) {
+  const titleInput = document.createElement("input");
+  titleInput.classList.add("todo-title-input");
+  titleInput.value = originalTitle;
+
+  const callback = (event) => {
+    const newTitle = event.target.value;
+    const domID = event.target.parentNode.id;
+    const todoID = getTodoIDfromDOMID(domID);
+    console.log(domID);
+    callbackFunction(todoID, newTitle);
+  };
+
+  titleInput.addEventListener("focusout", callback);
+  titleInput.addEventListener("keyup", (event) => {
+    if (event.keyCode === 13) {
+      callback(event);
+    }
+  });
+
+  return titleInput;
+}
+
+function replaceElement(queryText, element) {
+  try {
+    document.querySelector(queryText).replaceWith(element);
+  } catch (e) {
+    e = 1;
+  }
+}
+
+function removeElement(elementID) {
+  document.getElementById(elementID).remove();
+}
+
 export {
   createBanner,
   createSidebar,
@@ -153,5 +203,8 @@ export {
   createAddTodoItemButton,
   replaceContainer,
   toggleActiveProject,
+  replaceElement,
+  removeElement,
   replaceTodoOverview,
+  createTodoTitleEditor,
 };

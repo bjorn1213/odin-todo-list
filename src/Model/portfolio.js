@@ -50,11 +50,14 @@ export default function portfolioFactory(inputPortfolioName = "newPortfolioName"
     return project;
   };
 
+  const getActiveProject = () => projects[activeProjectID];
+
   return {
     setPortfolioName,
     getPortfolioName,
     setActiveProjectID,
     getActiveProjectID,
+    getActiveProject,
     getProjects,
     addProject,
     getProjectByID,

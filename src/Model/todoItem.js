@@ -4,7 +4,7 @@ export default function todoItemFactory(
   inputDueDate = new Date(Date.now()),
   inputPriority = "low"
 ) {
-  const validPriorities = ["high", "medium", "low"];
+  const validPriorities = ["low", "medium", "high"];
 
   // Parse inputs
   let title = inputTitle;
@@ -14,6 +14,8 @@ export default function todoItemFactory(
   if (validPriorities.includes(inputPriority.toLowerCase())) {
     priority = inputPriority.toLowerCase();
   }
+
+  let cssIDValue;
 
   // Set to uncompleted, and implement toggle
   let isCompleted = false;
@@ -37,11 +39,35 @@ export default function todoItemFactory(
   const setPriority = (newPriority) => {
     let success = false;
     if (validPriorities.includes(newPriority.toLowerCase())) {
-      priority = inputPriority.toLowerCase();
+      priority = newPriority.toLowerCase();
       success = true;
     }
     return success;
   };
+
+  const switchPriority = () => {
+    // dont change priority if task is completed
+    if (isCompleted) {
+      return;
+    }
+
+    const currentPriorityIndex = validPriorities.indexOf(priority);
+    let newPriorityIndex;
+
+    if (currentPriorityIndex === validPriorities.length - 1) {
+      newPriorityIndex = 0;
+    } else {
+      newPriorityIndex = currentPriorityIndex + 1;
+    }
+
+    setPriority(validPriorities[newPriorityIndex]);
+  };
+
+  const setCssIDValue = (newCssIDValue) => {
+    cssIDValue = newCssIDValue;
+  };
+  const getCssIDValue = () => cssIDValue;
+
   const setDueDate = (newDueDate) => {
     dueDate = newDueDate;
   };
@@ -56,6 +82,9 @@ export default function todoItemFactory(
     getPriority,
     setPriority,
     getCompleted,
+    switchPriority,
     toggleCompleted,
+    getCssIDValue,
+    setCssIDValue,
   };
 }

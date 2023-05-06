@@ -13,6 +13,9 @@ import {
   replaceContainer,
   toggleActiveProject,
   replaceTodoOverview,
+  removeElement,
+  replaceElement,
+  createTodoTitleEditor,
 } from "./View/viewModule";
 import todoItemFactory from "./Model/todoItem";
 
@@ -25,25 +28,6 @@ if (debug) {
 }
 
 // functions
-function removeTodo(todoID) {
-  const portfolio = mainPortfolio;
-  const project = portfolio.getProjectByID(portfolio.getActiveProjectID());
-
-  project.removeTodoItem(todoID);
-  const overview = createTodoOverview(project);
-  replaceTodoOverview(overview);
-}
-
-function toggleCompletedTodo(todoID) {
-  const portfolio = mainPortfolio;
-  const project = portfolio.getProjectByID(portfolio.getActiveProjectID());
-  const todo = project.getTodoByID(todoID);
-
-  todo.toggleCompleted();
-  const overview = createTodoOverview(project);
-  replaceTodoOverview(overview);
-}
-
 function activateProject(projectID) {
   const portfolio = mainPortfolio;
   if (!(projectID in portfolio.getProjects())) {
@@ -64,6 +48,53 @@ function activateProject(projectID) {
   replaceTodoOverview(overview);
 }
 
+// todo callbacks
+function todoPrioritySwitch(todoID) {
+  const todoItem = mainPortfolio.getActiveProject().getTodoByID(todoID);
+  todoItem.switchPriority();
+
+  refreshTodoItem(todoID);
+}
+
+function removeTodo(todoID) {
+  const project = mainPortfolio.getActiveProject();
+
+  const todoElementID = project.getTodoByID(todoID).getCssIDValue();
+  project.removeTodoItem(todoID);
+  removeElement(todoElementID);
+}
+
+function toggleCompletedTodo(todoID) {
+  const todo = mainPortfolio.getActiveProject().getTodoByID(todoID);
+
+  todo.toggleCompleted();
+  refreshTodoItem(todoID);
+}
+
+function toggleTodoTitleEdit(todoID) {
+  const todo = mainPortfolio.getActiveProject().getTodoByID(todoID);
+  const inputNode = createTodoTitleEditor(todo.getTitle(), updateTodoTitle);
+
+  replaceElement(`#${todo.getCssIDValue()} > .todo-title`, inputNode);
+}
+
+function updateTodoTitle(todoID, newTitle) {
+  const todo = mainPortfolio.getActiveProject().getTodoByID(todoID);
+  todo.setTitle(newTitle);
+  refreshTodoItem(todoID);
+}
+
+function getTodoDOM(todoID, todoItem) {
+  return createTodoItem(
+    todoID,
+    todoItem,
+    removeTodo,
+    toggleCompletedTodo,
+    todoPrioritySwitch,
+    toggleTodoTitleEdit
+  );
+}
+
 function addDefaultTodoItem() {
   const todoItem = todoItemFactory("New todo", "Description");
   const project = mainPortfolio.getProjectByID(mainPortfolio.getActiveProjectID());
@@ -73,12 +104,21 @@ function addDefaultTodoItem() {
   replaceTodoOverview(overview);
 }
 
+function refreshTodoItem(todoID) {
+  const todoItem = mainPortfolio.getActiveProject().getTodoByID(todoID);
+  const todoDOM = getTodoDOM(todoID, todoItem);
+
+  replaceElement(`#${todoItem.getCssIDValue()}`, todoDOM);
+}
+
 function createTodoOverview(project) {
   const todoContainer = createTodoContainer();
 
   const todos = project.getTodoItems();
   for (const [id, todoItem] of Object.entries(todos)) {
-    todoContainer.appendChild(createTodoItem(id, todoItem, removeTodo, toggleCompletedTodo));
+    const todoDOM = getTodoDOM(id, todoItem);
+    todoItem.setCssIDValue(todoDOM.id);
+    todoContainer.appendChild(todoDOM);
   }
   todoContainer.appendChild(createAddTodoItemButton(addDefaultTodoItem));
 
