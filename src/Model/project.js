@@ -4,6 +4,7 @@ export default function projectFactory(inputProjectName = "newProjectName") {
   // Initialise main data
   let projectName = inputProjectName;
   let todoItems = {};
+  let highestUnusedID = 0;
 
   // Define simple setters/getters
   const setProjectName = (newProjectName) => {
@@ -15,7 +16,7 @@ export default function projectFactory(inputProjectName = "newProjectName") {
 
   // Implement adding/removing todo item logic
   const addTodoItem = (todoItem) => {
-    const insertID = getInsertableID(todoItems);
+    const insertID = highestUnusedID++;
     todoItems[insertID] = todoItem;
   };
 

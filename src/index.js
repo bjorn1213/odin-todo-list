@@ -8,11 +8,13 @@ import {
   createSidebar,
   createTodoContainer,
   createContainer,
-  replaceContainer,
+  createAddTodoItemButton,
   createTodoItem,
+  replaceContainer,
   toggleActiveProject,
   replaceTodoOverview,
 } from "./View/viewModule";
+import todoItemFactory from "./Model/todoItem";
 
 const debug = false;
 
@@ -28,7 +30,7 @@ function removeTodo(todoID) {
   const project = portfolio.getProjectByID(portfolio.getActiveProjectID());
 
   project.removeTodoItem(todoID);
-  const overview = createTodoOverview(project, removeTodo, toggleCompletedTodo);
+  const overview = createTodoOverview(project);
   replaceTodoOverview(overview);
 }
 
@@ -38,11 +40,11 @@ function toggleCompletedTodo(todoID) {
   const todo = project.getTodoByID(todoID);
 
   todo.toggleCompleted();
-  const overview = createTodoOverview(project, removeTodo, toggleCompletedTodo);
+  const overview = createTodoOverview(project);
   replaceTodoOverview(overview);
 }
 
-const activateProject = (projectID) => {
+function activateProject(projectID) {
   const portfolio = mainPortfolio;
   if (!(projectID in portfolio.getProjects())) {
     return;
@@ -58,9 +60,18 @@ const activateProject = (projectID) => {
   portfolio.setActiveProjectID(projectID);
 
   const project = portfolio.getProjectByID(projectID);
-  const overview = createTodoOverview(project, removeTodo, toggleCompletedTodo);
+  const overview = createTodoOverview(project);
   replaceTodoOverview(overview);
-};
+}
+
+function addDefaultTodoItem() {
+  const todoItem = todoItemFactory("New todo", "Description");
+  const project = mainPortfolio.getProjectByID(mainPortfolio.getActiveProjectID());
+  project.addTodoItem(todoItem);
+
+  const overview = createTodoOverview(project);
+  replaceTodoOverview(overview);
+}
 
 function createTodoOverview(project) {
   const todoContainer = createTodoContainer();
@@ -69,6 +80,7 @@ function createTodoOverview(project) {
   for (const [id, todoItem] of Object.entries(todos)) {
     todoContainer.appendChild(createTodoItem(id, todoItem, removeTodo, toggleCompletedTodo));
   }
+  todoContainer.appendChild(createAddTodoItemButton(addDefaultTodoItem));
 
   return todoContainer;
 }

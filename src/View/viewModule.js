@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { add, format } from "date-fns";
 
 const createBanner = (pageTitle) => {
   const banner = document.createElement("div");
@@ -136,12 +136,21 @@ const replaceContainer = (newContainer) => {
   document.getElementsByTagName("body")[0].replaceChildren(newContainer);
 };
 
+const createAddTodoItemButton = (callbackFunction) => {
+  const addTodoButton = document.createElement("button");
+  addTodoButton.id = "add-todo-item";
+  addTodoButton.textContent = "+";
+  addTodoButton.addEventListener("click", () => callbackFunction());
+  return addTodoButton;
+};
+
 export {
   createBanner,
   createSidebar,
   createContainer,
   createTodoContainer,
   createTodoItem,
+  createAddTodoItemButton,
   replaceContainer,
   toggleActiveProject,
   replaceTodoOverview,

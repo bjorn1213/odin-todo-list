@@ -5,6 +5,7 @@ export default function portfolioFactory(inputPortfolioName = "newPortfolioName"
   let portfolioName = inputPortfolioName;
   let projects = {};
   let activeProjectID;
+  let highestUnusedID = 0;
 
   // Define simple setters/getters
   const setPortfolioName = (newPortfolioName) => {
@@ -21,7 +22,7 @@ export default function portfolioFactory(inputPortfolioName = "newPortfolioName"
 
   // Implement adding/removing todo item logic
   const addProject = (project) => {
-    const insertID = getInsertableID(projects);
+    const insertID = highestUnusedID++;
     projects[insertID] = project;
 
     // make added project active in case it's the first
