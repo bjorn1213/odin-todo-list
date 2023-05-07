@@ -1,5 +1,6 @@
 import { add, format } from "date-fns";
 
+// general page components
 const createBanner = (pageTitle) => {
   const banner = document.createElement("div");
   banner.classList.add("banner");
@@ -8,12 +9,37 @@ const createBanner = (pageTitle) => {
   return banner;
 };
 
+const createContainer = () => {
+  const container = document.createElement("div");
+  container.id = "container";
+
+  return container;
+};
+
+const replaceContainer = (newContainer) => {
+  document.getElementsByTagName("body")[0].replaceChildren(newContainer);
+};
+
+// utility
 const getProjectSidebarItemID = (projectID) => `project-${projectID}`;
 
 const getProjectIDfromDOMID = (domID) => domID.slice(8);
 
 const getTodoIDfromDOMID = (domID) => domID.slice(5);
 
+function replaceElement(queryText, element) {
+  try {
+    document.querySelector(queryText).replaceWith(element);
+  } catch (e) {
+    e = 1;
+  }
+}
+
+function removeElement(elementID) {
+  document.getElementById(elementID).remove();
+}
+
+// project level
 const toggleActiveProject = (oldActiveID, newActiveID) => {
   const previousActiveDOMID = getProjectSidebarItemID(oldActiveID);
   document.getElementById(previousActiveDOMID).classList.toggle("active-project");
@@ -54,13 +80,22 @@ const createSidebar = (projects, callbackFunction) => {
   return sidebar;
 };
 
+// todo level
+const createTodoContainer = () => {
+  const todoContainer = document.createElement("div");
+  todoContainer.id = "todo-overview";
+
+  return todoContainer;
+};
+
 const createTodoItem = (
   id,
   todo,
   deleteTodoCallback,
   completeTodoCallback,
   priorityToggleCallback,
-  titleEditCallback
+  titleEditCallback,
+  dateEditCallback
 ) => {
   const todoItem = document.createElement("div");
 
@@ -80,6 +115,10 @@ const createTodoItem = (
   const dueDateDOM = document.createElement("div");
   dueDateDOM.classList.add("todo-date");
   dueDateDOM.textContent = format(dueDate, "dd-MM-yyyy");
+  dueDateDOM.addEventListener("dblclick", (event) => {
+    const domID = event.target.parentNode.id;
+    dateEditCallback(getTodoIDfromDOMID(domID));
+  });
 
   const description = todo.getDescription();
   const descriptionDOM = document.createElement("div");
@@ -128,27 +167,9 @@ const createTodoItem = (
   return todoItem;
 };
 
-const createTodoContainer = () => {
-  const todoContainer = document.createElement("div");
-  todoContainer.id = "todo-overview";
-
-  return todoContainer;
-};
-
 const replaceTodoOverview = (newOverview) => {
   const overview = document.getElementById("todo-overview");
   overview.replaceWith(newOverview);
-};
-
-const createContainer = () => {
-  const container = document.createElement("div");
-  container.id = "container";
-
-  return container;
-};
-
-const replaceContainer = (newContainer) => {
-  document.getElementsByTagName("body")[0].replaceChildren(newContainer);
 };
 
 const createAddTodoItemButton = (callbackFunction) => {
@@ -159,6 +180,7 @@ const createAddTodoItemButton = (callbackFunction) => {
   return addTodoButton;
 };
 
+// todo editors
 function createTodoTitleEditor(originalTitle, callbackFunction) {
   const titleInput = document.createElement("input");
   titleInput.classList.add("todo-title-input");
@@ -182,18 +204,31 @@ function createTodoTitleEditor(originalTitle, callbackFunction) {
   return titleInput;
 }
 
-function replaceElement(queryText, element) {
-  try {
-    document.querySelector(queryText).replaceWith(element);
-  } catch (e) {
-    e = 1;
-  }
+function createTodoDateEditor(originalDate, callbackFunction) {
+  const dateInput = document.createElement("input");
+  dateInput.type = "date";
+  dateInput.classList.add("todo-date-input");
+  dateInput.value = originalDate;
+
+  const callback = (event) => {
+    const newDate = event.target.value;
+    const domID = event.target.parentNode.id;
+    const todoID = getTodoIDfromDOMID(domID);
+    console.log(domID);
+    callbackFunction(todoID, newDate);
+  };
+
+  dateInput.addEventListener("focusout", callback);
+  dateInput.addEventListener("keyup", (event) => {
+    if (event.keyCode === 13) {
+      callback(event);
+    }
+  });
+
+  return dateInput;
 }
 
-function removeElement(elementID) {
-  document.getElementById(elementID).remove();
-}
-
+// export
 export {
   createBanner,
   createSidebar,
@@ -207,4 +242,5 @@ export {
   removeElement,
   replaceTodoOverview,
   createTodoTitleEditor,
+  createTodoDateEditor,
 };

@@ -2,6 +2,8 @@ import "./View/assets/todo.css";
 import "./View/assets/style.css";
 import "./View/assets/fonts.css";
 
+import { parse, isValid as isValidDate } from "date-fns";
+
 import { getDummyPortfolio, printPortfolioContents } from "./Controller/dataHandler";
 import {
   createBanner,
@@ -16,6 +18,7 @@ import {
   removeElement,
   replaceElement,
   createTodoTitleEditor,
+  createTodoDateEditor,
 } from "./View/viewModule";
 import todoItemFactory from "./Model/todoItem";
 
@@ -71,6 +74,7 @@ function toggleCompletedTodo(todoID) {
   refreshTodoItem(todoID);
 }
 
+// todo title editing
 function toggleTodoTitleEdit(todoID) {
   const todo = mainPortfolio.getActiveProject().getTodoByID(todoID);
   const inputNode = createTodoTitleEditor(todo.getTitle(), updateTodoTitle);
@@ -85,6 +89,26 @@ function updateTodoTitle(todoID, newTitle) {
   refreshTodoItem(todoID);
 }
 
+// todo date editing
+function toggleTodoDateEdit(todoID) {
+  const todo = mainPortfolio.getActiveProject().getTodoByID(todoID);
+  const inputNode = createTodoDateEditor(todo.getTitle(), updateTodoDate);
+
+  replaceElement(`#${todo.getCssIDValue()} > .todo-date`, inputNode);
+  inputNode.focus();
+}
+
+function updateTodoDate(todoID, newDate) {
+  const todo = mainPortfolio.getActiveProject().getTodoByID(todoID);
+  const parsedDate = parse(newDate, "yyyy-mm-dd", new Date());
+
+  if (isValidDate(parsedDate)) {
+    todo.setDueDate(parsedDate);
+  }
+
+  refreshTodoItem(todoID);
+}
+
 function getTodoDOM(todoID, todoItem) {
   return createTodoItem(
     todoID,
@@ -92,7 +116,8 @@ function getTodoDOM(todoID, todoItem) {
     removeTodo,
     toggleCompletedTodo,
     todoPrioritySwitch,
-    toggleTodoTitleEdit
+    toggleTodoTitleEdit,
+    toggleTodoDateEdit
   );
 }
 
