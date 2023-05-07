@@ -146,3 +146,8 @@ button {
 .todo-item > input {
   font: inherit;
 }
+
+.todo-description-input {
+  font: inherit;
+  resize: none;
+}

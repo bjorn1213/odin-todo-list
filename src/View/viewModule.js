@@ -95,7 +95,8 @@ const createTodoItem = (
   completeTodoCallback,
   priorityToggleCallback,
   titleEditCallback,
-  dateEditCallback
+  dateEditCallback,
+  descriptionEditCallback
 ) => {
   const todoItem = document.createElement("div");
 
@@ -124,6 +125,10 @@ const createTodoItem = (
   const descriptionDOM = document.createElement("div");
   descriptionDOM.classList.add("todo-description");
   descriptionDOM.textContent = description;
+  descriptionDOM.addEventListener("dblclick", (event) => {
+    const domID = event.target.parentNode.id;
+    descriptionEditCallback(getTodoIDfromDOMID(domID));
+  });
 
   const priority = todo.getPriority();
   const priorityDOM = document.createElement("div");
@@ -181,6 +186,28 @@ const createAddTodoItemButton = (callbackFunction) => {
 };
 
 // todo editors
+function createTodoDescriptionEditor(originalDescription, callbackFunction) {
+  const descriptionInput = document.createElement("textarea");
+  descriptionInput.classList.add("todo-description-input");
+  descriptionInput.value = originalDescription;
+
+  const callback = (event) => {
+    const newDescription = event.target.value;
+    const domID = event.target.parentNode.id;
+    const todoID = getTodoIDfromDOMID(domID);
+    console.log(domID);
+    callbackFunction(todoID, newDescription);
+  };
+
+  descriptionInput.addEventListener("focusout", callback);
+  descriptionInput.addEventListener("keyup", (event) => {
+    if (event.keyCode === 13) {
+      callback(event);
+    }
+  });
+
+  return descriptionInput;
+}
 function createTodoTitleEditor(originalTitle, callbackFunction) {
   const titleInput = document.createElement("input");
   titleInput.classList.add("todo-title-input");
@@ -208,7 +235,7 @@ function createTodoDateEditor(originalDate, callbackFunction) {
   const dateInput = document.createElement("input");
   dateInput.type = "date";
   dateInput.classList.add("todo-date-input");
-  dateInput.value = originalDate;
+  dateInput.valueAsDate = originalDate;
 
   const callback = (event) => {
     const newDate = event.target.value;
@@ -243,4 +270,5 @@ export {
   replaceTodoOverview,
   createTodoTitleEditor,
   createTodoDateEditor,
+  createTodoDescriptionEditor,
 };

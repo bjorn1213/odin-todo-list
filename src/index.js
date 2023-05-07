@@ -19,6 +19,7 @@ import {
   replaceElement,
   createTodoTitleEditor,
   createTodoDateEditor,
+  createTodoDescriptionEditor,
 } from "./View/viewModule";
 import todoItemFactory from "./Model/todoItem";
 
@@ -89,10 +90,25 @@ function updateTodoTitle(todoID, newTitle) {
   refreshTodoItem(todoID);
 }
 
+// todo description editing
+function toggleTodoDescriptionEdit(todoID) {
+  const todo = mainPortfolio.getActiveProject().getTodoByID(todoID);
+  const inputNode = createTodoDescriptionEditor(todo.getDescription(), updateTodoDescription);
+
+  replaceElement(`#${todo.getCssIDValue()} > .todo-description`, inputNode);
+  inputNode.focus();
+}
+
+function updateTodoDescription(todoID, newDescription) {
+  const todo = mainPortfolio.getActiveProject().getTodoByID(todoID);
+  todo.setDescription(newDescription);
+  refreshTodoItem(todoID);
+}
+
 // todo date editing
 function toggleTodoDateEdit(todoID) {
   const todo = mainPortfolio.getActiveProject().getTodoByID(todoID);
-  const inputNode = createTodoDateEditor(todo.getTitle(), updateTodoDate);
+  const inputNode = createTodoDateEditor(todo.getDueDate(), updateTodoDate);
 
   replaceElement(`#${todo.getCssIDValue()} > .todo-date`, inputNode);
   inputNode.focus();
@@ -117,7 +133,8 @@ function getTodoDOM(todoID, todoItem) {
     toggleCompletedTodo,
     todoPrioritySwitch,
     toggleTodoTitleEdit,
-    toggleTodoDateEdit
+    toggleTodoDateEdit,
+    toggleTodoDescriptionEdit
   );
 }
 
