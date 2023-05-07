@@ -71,7 +71,7 @@ const createTodoItem = (
   const titleDOM = document.createElement("div");
   titleDOM.classList.add("todo-title");
   titleDOM.textContent = title;
-  titleDOM.addEventListener("click", (event) => {
+  titleDOM.addEventListener("dblclick", (event) => {
     const domID = event.target.parentNode.id;
     titleEditCallback(getTodoIDfromDOMID(domID));
   });

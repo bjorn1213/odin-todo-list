@@ -76,6 +76,7 @@ function toggleTodoTitleEdit(todoID) {
   const inputNode = createTodoTitleEditor(todo.getTitle(), updateTodoTitle);
 
   replaceElement(`#${todo.getCssIDValue()} > .todo-title`, inputNode);
+  inputNode.focus();
 }
 
 function updateTodoTitle(todoID, newTitle) {
