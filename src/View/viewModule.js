@@ -48,36 +48,30 @@ const toggleActiveProject = (oldActiveID, newActiveID) => {
   document.getElementById(projectDOMID).classList.toggle("active-project");
 };
 
-const createSidebarItem = (id, project) => {
+const createSidebarItem = (projectID, project, isActive, activateCallback) => {
   const item = document.createElement("div");
 
   item.classList.add("project-item");
-  item.id = getProjectSidebarItemID(id);
+  item.id = getProjectSidebarItemID(projectID);
   item.textContent = project.getProjectName();
+
+  if (isActive) {
+    item.classList.add("active-project");
+  }
+
+  item.addEventListener("click", (event) => {
+    const domID = event.target.id;
+    activateCallback(getProjectIDfromDOMID(domID));
+  });
 
   return item;
 };
 
-const createSidebar = (projects, callbackFunction) => {
-  const sidebar = document.createElement("div");
-  sidebar.classList.add("sidebar");
+const createProjectContainer = () => {
+  const projectContainer = document.createElement("div");
+  projectContainer.classList.add("sidebar");
 
-  const firstProjectID = Object.keys(projects)[0]; // assumes at least 1 project
-
-  for (const [id, project] of Object.entries(projects)) {
-    const sidebarItem = createSidebarItem(id, project);
-    if (id === firstProjectID) {
-      sidebarItem.classList.add("active-project");
-    }
-    sidebarItem.addEventListener("click", (event) => {
-      const domID = event.target.id;
-      callbackFunction(getProjectIDfromDOMID(domID));
-    });
-
-    sidebar.appendChild(sidebarItem);
-  }
-
-  return sidebar;
+  return projectContainer;
 };
 
 // todo level
@@ -258,7 +252,8 @@ function createTodoDateEditor(originalDate, callbackFunction) {
 // export
 export {
   createBanner,
-  createSidebar,
+  createProjectContainer,
+  createSidebarItem,
   createContainer,
   createTodoContainer,
   createTodoItem,

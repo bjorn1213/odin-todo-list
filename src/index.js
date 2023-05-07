@@ -7,16 +7,17 @@ import { parse, isValid as isValidDate } from "date-fns";
 import { getDummyPortfolio, printPortfolioContents } from "./Controller/dataHandler";
 import {
   createBanner,
-  createSidebar,
-  createTodoContainer,
+  createProjectContainer,
+  createSidebarItem,
   createContainer,
-  createAddTodoItemButton,
+  createTodoContainer,
   createTodoItem,
+  createAddTodoItemButton,
   replaceContainer,
   toggleActiveProject,
-  replaceTodoOverview,
-  removeElement,
   replaceElement,
+  removeElement,
+  replaceTodoOverview,
   createTodoTitleEditor,
   createTodoDateEditor,
   createTodoDescriptionEditor,
@@ -125,6 +126,7 @@ function updateTodoDate(todoID, newDate) {
   refreshTodoItem(todoID);
 }
 
+// todo DOM generation
 function getTodoDOM(todoID, todoItem) {
   return createTodoItem(
     todoID,
@@ -168,6 +170,28 @@ function createTodoOverview(project) {
   return todoContainer;
 }
 
+// project DOM generation
+function getProjectDOM(projectID, project) {
+  return createSidebarItem(
+    projectID,
+    project,
+    mainPortfolio.getActiveProjectID() === Number(projectID), // indicate if project is active
+    activateProject
+  );
+}
+
+function createProjectOverview() {
+  const projectContainer = createProjectContainer();
+  const projects = mainPortfolio.getProjects();
+
+  for (const [projectID, project] of Object.entries(projects)) {
+    const projectDOM = getProjectDOM(projectID, project);
+    projectContainer.appendChild(projectDOM);
+  }
+
+  return projectContainer;
+}
+
 // create page
 const initialisePage = (portfolio) => {
   const projects = portfolio.getProjects();
@@ -175,8 +199,8 @@ const initialisePage = (portfolio) => {
 
   const container = createContainer();
   const banner = createBanner("Todo Application");
-  const sidebar = createSidebar(projects, activateProject);
-  const overview = createTodoOverview(firstProject, removeTodo, toggleCompletedTodo);
+  const sidebar = createProjectOverview();
+  const overview = createTodoOverview(firstProject);
 
   container.append(banner, sidebar, overview);
   replaceContainer(container);
