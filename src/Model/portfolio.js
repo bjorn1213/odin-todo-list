@@ -27,6 +27,7 @@ export default function portfolioFactory(inputPortfolioName = "newPortfolioName"
     if (Object.keys(projects).length === 1) {
       activeProjectID = insertID;
     }
+    return insertID;
   };
 
   const removeProject = (projectID) => {

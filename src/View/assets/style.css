@@ -65,3 +65,17 @@ html {
   font-size: 1.1rem;
   font-weight: bold;
 }
+
+#add-project {
+  padding-left: 10px;
+}
+
+#add-project:hover {
+  padding-left: 0;
+  border-left: 10px solid var(--main-color-highlight);
+  background-color: var(--secondary-color-highlight);
+}
+
+#add-project:active {
+  background-color: var(--secondary-color);
+}

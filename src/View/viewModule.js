@@ -172,12 +172,25 @@ const replaceTodoOverview = (newOverview) => {
   overview.replaceWith(newOverview);
 };
 
+const replaceProjectOverview = (newOverview) => {
+  const overview = document.querySelector(".sidebar");
+  overview.replaceWith(newOverview);
+};
+
 const createAddTodoItemButton = (callbackFunction) => {
   const addTodoButton = document.createElement("button");
   addTodoButton.id = "add-todo-item";
   addTodoButton.textContent = "+";
   addTodoButton.addEventListener("click", () => callbackFunction());
   return addTodoButton;
+};
+
+const createAddProjectButton = (callbackFunction) => {
+  const addProjectButton = document.createElement("button");
+  addProjectButton.id = "add-project";
+  addProjectButton.textContent = "new";
+  addProjectButton.addEventListener("click", () => callbackFunction());
+  return addProjectButton;
 };
 
 // todo editors
@@ -259,11 +272,13 @@ export {
   createTodoContainer,
   createTodoItem,
   createAddTodoItemButton,
+  createAddProjectButton,
   replaceContainer,
   toggleActiveProject,
   replaceElement,
   removeElement,
   replaceTodoOverview,
+  replaceProjectOverview,
   createTodoTitleEditor,
   createTodoDateEditor,
   createTodoDescriptionEditor,

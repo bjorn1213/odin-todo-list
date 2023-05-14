@@ -22,11 +22,14 @@ import {
   replaceElement,
   removeElement,
   replaceTodoOverview,
+  replaceProjectOverview,
   createTodoTitleEditor,
   createTodoDateEditor,
   createTodoDescriptionEditor,
+  createAddProjectButton,
 } from "./View/viewModule";
 import todoItemFactory from "./Model/todoItem";
+import projectFactory from "./Model/project";
 
 const debug = false;
 
@@ -175,6 +178,7 @@ function createProjectOverview() {
     const projectDOM = getProjectDOM(projectID, project);
     projectContainer.appendChild(projectDOM);
   }
+  projectContainer.appendChild(createAddProjectButton(addEmptyProject));
 
   return projectContainer;
 }
@@ -197,6 +201,17 @@ function activateProject(projectID) {
   const project = portfolio.getProjectByID(projectID);
   const overview = createTodoOverview(project);
   replaceTodoOverview(overview);
+}
+
+function addEmptyProject() {
+  const project = projectFactory("projectName");
+  const projectID = mainPortfolio.addProject(project);
+  project.setProjectName(`Project ${projectID + 1}`);
+
+  const projectOverview = createProjectOverview();
+  replaceProjectOverview(projectOverview);
+
+  activateProject(projectID);
 }
 
 // create page
