@@ -111,6 +111,11 @@ function portfolioFromJSON(portfolioJSON) {
   const plainPortfolio = JSON.parse(portfolioJSON);
   let portfolio = portfolioFactory(plainPortfolio.portfolioName);
 
+  if (Object.keys(plainPortfolio.projects).length === 0) {
+    portfolio = getEmptyPortfolio();
+    return portfolio;
+  }
+
   for (let [projectID, projectPlain] of Object.entries(plainPortfolio.projects)) {
     const project = projectFactory(projectPlain.projectName);
 
