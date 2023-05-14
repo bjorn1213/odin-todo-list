@@ -3,6 +3,7 @@ import projectFactory from "../Model/project";
 import todoItemFactory from "../Model/todoItem";
 
 const dummyText = `Dummytext`;
+const portfolioStorageKey = "portfolioJSON";
 
 const getDummyPortfolio = () => {
   const portfolio = portfolioFactory("Dummy portfolio");
@@ -28,6 +29,17 @@ const getDummyPortfolio = () => {
   portfolio.setActiveProjectID(0);
 
   portfolioToJSON(portfolio);
+
+  return portfolio;
+};
+
+const getEmptyPortfolio = () => {
+  const portfolio = portfolioFactory("Todo portfolio");
+
+  const project = projectFactory("Project 1");
+  portfolio.addProject(project);
+
+  portfolio.setActiveProjectID(0);
 
   return portfolio;
 };
@@ -91,9 +103,58 @@ function portfolioToJSON(portfolio) {
     portfolioObject.projects[projectID] = projectToPlain(project);
   }
 
-  console.log(JSON.stringify(portfolioObject));
+  console.log(JSON.parse(JSON.stringify(portfolioObject)));
 
   return JSON.stringify(portfolioObject);
 }
 
-export { getDummyPortfolio, printPortfolioContents };
+function portfolioFromJSON(portfolioJSON) {
+  const plainPortfolio = JSON.parse(portfolioJSON);
+  let portfolio = portfolioFactory(plainPortfolio.portfolioName);
+
+  for (let [projectID, projectPlain] of Object.entries(plainPortfolio.projects)) {
+    const project = projectFactory(projectPlain.projectName);
+
+    for (let [todoID, todoPlain] of Object.entries(projectPlain.todoItems)) {
+      const todo = todoItemFactory(
+        todoPlain.title,
+        todoPlain.description,
+        todoPlain.dueDate,
+        todoPlain.priority
+      );
+      if (todoPlain.isCompleted) {
+        todo.toggleCompleted();
+      }
+
+      project.addTodoItem(todo);
+    }
+    portfolio.addProject(project);
+  }
+
+  portfolio.setActiveProjectID(0);
+  return portfolio;
+}
+
+function savePortfolioToStorage(portfolio) {
+  const portfolioJSON = portfolioToJSON(portfolio);
+  localStorage.setItem(portfolioStorageKey, portfolioJSON);
+}
+
+function loadPortfolioFromStorage() {
+  let portfolio;
+  if (!localStorage.getItem(portfolioStorageKey)) {
+    portfolio = getEmptyPortfolio();
+    savePortfolioToStorage(portfolio);
+  } else {
+    const portfolioJSON = localStorage.getItem(portfolioStorageKey);
+    portfolio = portfolioFromJSON(portfolioJSON);
+  }
+  return portfolio;
+}
+
+export {
+  getDummyPortfolio,
+  printPortfolioContents,
+  loadPortfolioFromStorage,
+  savePortfolioToStorage,
+};
