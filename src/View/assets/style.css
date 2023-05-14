@@ -43,7 +43,7 @@ html {
   padding-top: 50px;
   background-color: var(--secondary-color);
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 100%;
   grid-auto-rows: 2.5rem;
 }
 
@@ -53,6 +53,15 @@ html {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.project-item > div {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
 }
 
 .project-item:hover {
