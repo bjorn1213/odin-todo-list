@@ -1,3 +1,4 @@
+import { parse } from "date-fns";
 import portfolioFactory from "../Model/portfolio";
 import projectFactory from "../Model/project";
 import todoItemFactory from "../Model/todoItem";
@@ -103,8 +104,6 @@ function portfolioToJSON(portfolio) {
     portfolioObject.projects[projectID] = projectToPlain(project);
   }
 
-  console.log(JSON.parse(JSON.stringify(portfolioObject)));
-
   return JSON.stringify(portfolioObject);
 }
 
@@ -119,7 +118,7 @@ function portfolioFromJSON(portfolioJSON) {
       const todo = todoItemFactory(
         todoPlain.title,
         todoPlain.description,
-        todoPlain.dueDate,
+        new Date(todoPlain.dueDate),
         todoPlain.priority
       );
       if (todoPlain.isCompleted) {

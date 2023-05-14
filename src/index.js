@@ -4,7 +4,11 @@ import "./View/assets/fonts.css";
 
 import { parse, isValid as isValidDate } from "date-fns";
 
-import { getDummyPortfolio, printPortfolioContents } from "./Controller/dataHandler";
+import {
+  printPortfolioContents,
+  loadPortfolioFromStorage,
+  savePortfolioToStorage,
+} from "./Controller/dataHandler";
 import {
   createBanner,
   createProjectContainer,
@@ -26,31 +30,10 @@ import todoItemFactory from "./Model/todoItem";
 
 const debug = false;
 
-const mainPortfolio = getDummyPortfolio();
+const mainPortfolio = loadPortfolioFromStorage();
 
 if (debug) {
   printPortfolioContents(mainPortfolio);
-}
-
-// functions
-function activateProject(projectID) {
-  const portfolio = mainPortfolio;
-  if (!(projectID in portfolio.getProjects())) {
-    return;
-  }
-
-  const oldActiveProjectID = portfolio.getActiveProjectID();
-
-  if (projectID === oldActiveProjectID) {
-    return;
-  }
-
-  toggleActiveProject(oldActiveProjectID, projectID);
-  portfolio.setActiveProjectID(projectID);
-
-  const project = portfolio.getProjectByID(projectID);
-  const overview = createTodoOverview(project);
-  replaceTodoOverview(overview);
 }
 
 // todo callbacks
@@ -67,6 +50,8 @@ function removeTodo(todoID) {
   const todoElementID = project.getTodoByID(todoID).getCssIDValue();
   project.removeTodoItem(todoID);
   removeElement(todoElementID);
+
+  savePortfolioToStorage(mainPortfolio);
 }
 
 function toggleCompletedTodo(todoID) {
@@ -140,20 +125,12 @@ function getTodoDOM(todoID, todoItem) {
   );
 }
 
-function addDefaultTodoItem() {
-  const todoItem = todoItemFactory("New todo", "Description");
-  const project = mainPortfolio.getProjectByID(mainPortfolio.getActiveProjectID());
-  project.addTodoItem(todoItem);
-
-  const overview = createTodoOverview(project);
-  replaceTodoOverview(overview);
-}
-
 function refreshTodoItem(todoID) {
   const todoItem = mainPortfolio.getActiveProject().getTodoByID(todoID);
   const todoDOM = getTodoDOM(todoID, todoItem);
 
   replaceElement(`#${todoItem.getCssIDValue()}`, todoDOM);
+  savePortfolioToStorage(mainPortfolio);
 }
 
 function createTodoOverview(project) {
@@ -167,7 +144,17 @@ function createTodoOverview(project) {
   }
   todoContainer.appendChild(createAddTodoItemButton(addDefaultTodoItem));
 
+  savePortfolioToStorage(mainPortfolio);
   return todoContainer;
+}
+
+function addDefaultTodoItem() {
+  const todoItem = todoItemFactory("New todo", "Description");
+  const project = mainPortfolio.getProjectByID(mainPortfolio.getActiveProjectID());
+  project.addTodoItem(todoItem);
+
+  const overview = createTodoOverview(project);
+  replaceTodoOverview(overview);
 }
 
 // project DOM generation
@@ -190,6 +177,26 @@ function createProjectOverview() {
   }
 
   return projectContainer;
+}
+
+function activateProject(projectID) {
+  const portfolio = mainPortfolio;
+  if (!(projectID in portfolio.getProjects())) {
+    return;
+  }
+
+  const oldActiveProjectID = portfolio.getActiveProjectID();
+
+  if (projectID === oldActiveProjectID) {
+    return;
+  }
+
+  toggleActiveProject(oldActiveProjectID, projectID);
+  portfolio.setActiveProjectID(projectID);
+
+  const project = portfolio.getProjectByID(projectID);
+  const overview = createTodoOverview(project);
+  replaceTodoOverview(overview);
 }
 
 // create page

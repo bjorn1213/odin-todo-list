@@ -1,4 +1,4 @@
-import { add, format } from "date-fns";
+import { format } from "date-fns";
 
 // general page components
 const createBanner = (pageTitle) => {
@@ -31,6 +31,7 @@ function replaceElement(queryText, element) {
   try {
     document.querySelector(queryText).replaceWith(element);
   } catch (e) {
+    // eslint-disable-next-line no-ex-assign
     e = 1;
   }
 }
