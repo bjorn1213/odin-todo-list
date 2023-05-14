@@ -1,5 +1,3 @@
-import { getInsertableID } from "./utility";
-
 export default function projectFactory(inputProjectName = "newProjectName") {
   // Initialise main data
   let projectName = inputProjectName;

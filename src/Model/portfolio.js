@@ -1,5 +1,3 @@
-import { getInsertableID } from "./utility";
-
 export default function portfolioFactory(inputPortfolioName = "newPortfolioName") {
   // Initialise main data
   let portfolioName = inputPortfolioName;
