@@ -3,6 +3,7 @@ export default function projectFactory(inputProjectName = "newProjectName") {
   let projectName = inputProjectName;
   let todoItems = {};
   let highestUnusedID = 0;
+  let cssIDValue;
 
   // Define simple setters/getters
   const setProjectName = (newProjectName) => {
@@ -28,6 +29,11 @@ export default function projectFactory(inputProjectName = "newProjectName") {
     return success;
   };
 
+  const setCssIDValue = (newCssIDValue) => {
+    cssIDValue = newCssIDValue;
+  };
+  const getCssIDValue = () => cssIDValue;
+
   return {
     setProjectName,
     getProjectName,
@@ -35,5 +41,7 @@ export default function projectFactory(inputProjectName = "newProjectName") {
     getTodoByID,
     addTodoItem,
     removeTodoItem,
+    getCssIDValue,
+    setCssIDValue,
   };
 }

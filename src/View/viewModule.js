@@ -43,26 +43,68 @@ function removeElement(elementID) {
 // project level
 const toggleActiveProject = (oldActiveID, newActiveID) => {
   const previousActiveDOMID = getProjectSidebarItemID(oldActiveID);
-  document.getElementById(previousActiveDOMID).classList.toggle("active-project");
+  const previousDom = document.getElementById(previousActiveDOMID);
+  if (previousDom.classList.contains("active-project")) {
+    previousDom.classList.remove("active-project");
+  }
 
   const projectDOMID = getProjectSidebarItemID(newActiveID);
-  document.getElementById(projectDOMID).classList.toggle("active-project");
+  const dom = document.getElementById(projectDOMID);
+  if (!dom.classList.contains("active-project")) {
+    dom.classList.add("active-project");
+  }
 };
 
-const createSidebarItem = (projectID, project, isActive, activateCallback) => {
+const createSidebarItem = (
+  projectID,
+  project,
+  isActive,
+  activateCallback,
+  deleteCallback,
+  nameEditCallback
+) => {
   const item = document.createElement("div");
 
   item.classList.add("project-item");
   item.id = getProjectSidebarItemID(projectID);
-  item.textContent = project.getProjectName();
+
+  const text = document.createElement("div");
+  text.textContent = project.getProjectName();
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "X";
+  deleteBtn.classList.add("project-delete");
+  deleteBtn.addEventListener("click", (event) => {
+    const projectDOMID = event.target.parentNode.id;
+    const projectID = getProjectIDfromDOMID(projectDOMID);
+    deleteCallback(projectID);
+  });
+
+  item.appendChild(text);
+  item.appendChild(deleteBtn);
 
   if (isActive) {
     item.classList.add("active-project");
   }
 
   item.addEventListener("click", (event) => {
-    const domID = event.target.id;
+    let domID;
+    if (event.target.id === "") {
+      domID = event.target.parentNode.id;
+    } else {
+      domID = event.target.id;
+    }
+
     activateCallback(getProjectIDfromDOMID(domID));
+  });
+  item.addEventListener("dblclick", (event) => {
+    let domID;
+    if (event.target.id === "") {
+      domID = event.target.parentNode.id;
+    } else {
+      domID = event.target.id;
+    }
+    nameEditCallback(getProjectIDfromDOMID(domID));
   });
 
   return item;
@@ -74,6 +116,28 @@ const createProjectContainer = () => {
 
   return projectContainer;
 };
+
+function createProjectNameEditor(originalName, callbackFunction) {
+  const nameInput = document.createElement("input");
+  nameInput.classList.add("project-name-input");
+  nameInput.value = originalName;
+
+  const callback = (event) => {
+    const newName = event.target.value;
+    const domID = event.target.parentNode.id;
+    const projectID = getProjectIDfromDOMID(domID);
+    callbackFunction(projectID, newName);
+  };
+
+  nameInput.addEventListener("focusout", callback);
+  nameInput.addEventListener("keyup", (event) => {
+    if (event.keyCode === 13) {
+      callback(event);
+    }
+  });
+
+  return nameInput;
+}
 
 // todo level
 const createTodoContainer = () => {
@@ -282,4 +346,5 @@ export {
   createTodoTitleEditor,
   createTodoDateEditor,
   createTodoDescriptionEditor,
+  createProjectNameEditor,
 };

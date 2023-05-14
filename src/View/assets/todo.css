@@ -117,7 +117,7 @@ button {
 }
 
 .todo-item .btn-todo-remove:hover {
-  outline: 1px solid #c20000;
+  outline: 1px solid var(--delete-color);
 }
 
 .todo-item .btn-todo-toggle-complete:active {
@@ -127,7 +127,7 @@ button {
 }
 
 .todo-item .btn-todo-remove:active {
-  background-color: #c20000;
+  background-color: var(--delete-color);
   color: white;
   font-weight: bold;
 }

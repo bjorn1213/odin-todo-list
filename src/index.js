@@ -27,6 +27,7 @@ import {
   createTodoDateEditor,
   createTodoDescriptionEditor,
   createAddProjectButton,
+  createProjectNameEditor,
 } from "./View/viewModule";
 import todoItemFactory from "./Model/todoItem";
 import projectFactory from "./Model/project";
@@ -39,7 +40,7 @@ if (debug) {
   printPortfolioContents(mainPortfolio);
 }
 
-// todo callbacks
+// TODO ITEM SECTION
 function todoPrioritySwitch(todoID) {
   const todoItem = mainPortfolio.getActiveProject().getTodoByID(todoID);
   todoItem.switchPriority();
@@ -64,7 +65,7 @@ function toggleCompletedTodo(todoID) {
   refreshTodoItem(todoID);
 }
 
-// todo title editing
+// -- field editing
 function toggleTodoTitleEdit(todoID) {
   const todo = mainPortfolio.getActiveProject().getTodoByID(todoID);
   const inputNode = createTodoTitleEditor(todo.getTitle(), updateTodoTitle);
@@ -79,7 +80,6 @@ function updateTodoTitle(todoID, newTitle) {
   refreshTodoItem(todoID);
 }
 
-// todo description editing
 function toggleTodoDescriptionEdit(todoID) {
   const todo = mainPortfolio.getActiveProject().getTodoByID(todoID);
   const inputNode = createTodoDescriptionEditor(todo.getDescription(), updateTodoDescription);
@@ -94,7 +94,6 @@ function updateTodoDescription(todoID, newDescription) {
   refreshTodoItem(todoID);
 }
 
-// todo date editing
 function toggleTodoDateEdit(todoID) {
   const todo = mainPortfolio.getActiveProject().getTodoByID(todoID);
   const inputNode = createTodoDateEditor(todo.getDueDate(), updateTodoDate);
@@ -114,7 +113,7 @@ function updateTodoDate(todoID, newDate) {
   refreshTodoItem(todoID);
 }
 
-// todo DOM generation
+// -- DOM related
 function getTodoDOM(todoID, todoItem) {
   return createTodoItem(
     todoID,
@@ -160,13 +159,26 @@ function addDefaultTodoItem() {
   replaceTodoOverview(overview);
 }
 
-// project DOM generation
+// PROJECT SECTION
+
+function removeProject(projectID) {
+  const project = mainPortfolio.getProjectByID(projectID);
+  const projectElementID = project.getCssIDValue();
+  mainPortfolio.removeProject(projectID);
+  removeElement(projectElementID);
+
+  savePortfolioToStorage(mainPortfolio);
+}
+
+// -- DOM related
 function getProjectDOM(projectID, project) {
   return createSidebarItem(
     projectID,
     project,
     mainPortfolio.getActiveProjectID() === Number(projectID), // indicate if project is active
-    activateProject
+    activateProject,
+    removeProject,
+    toggleProjectNameEdit
   );
 }
 
@@ -176,6 +188,7 @@ function createProjectOverview() {
 
   for (const [projectID, project] of Object.entries(projects)) {
     const projectDOM = getProjectDOM(projectID, project);
+    project.setCssIDValue(projectDOM.id);
     projectContainer.appendChild(projectDOM);
   }
   projectContainer.appendChild(createAddProjectButton(addEmptyProject));
@@ -210,8 +223,34 @@ function addEmptyProject() {
 
   const projectOverview = createProjectOverview();
   replaceProjectOverview(projectOverview);
-
   activateProject(projectID);
+}
+
+function refreshProject(projectID) {
+  const project = mainPortfolio.getProjectByID(projectID);
+  const projectDOM = getProjectDOM(projectID, project);
+
+  projectDOM.classList.add("active-project");
+
+  replaceElement(`#${project.getCssIDValue()}`, projectDOM);
+  savePortfolioToStorage(mainPortfolio);
+}
+
+// -- field editing
+function toggleProjectNameEdit(projectID) {
+  const project = mainPortfolio.getProjectByID(projectID);
+  const inputNode = createProjectNameEditor(project.getProjectName(), updateProjectName);
+
+  replaceElement(`#${project.getCssIDValue()} > div`, inputNode);
+  inputNode.focus();
+}
+
+function updateProjectName(projectID, newName) {
+  const project = mainPortfolio.getProjectByID(projectID);
+  if (newName.length > 1) {
+    project.setProjectName(newName);
+  }
+  refreshProject(projectID);
 }
 
 // create page
